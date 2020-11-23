@@ -1,6 +1,7 @@
-import React, { useReducer, useMemo } from "react";
+import React from "react";
 import "./App.css";
-import { createSlice, PayloadAction, Slice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { useReducerFromReduxToolKit } from "./useReducerFromReduxToolKit";
 
 const slice = createSlice({
   name: "counter",
@@ -13,25 +14,6 @@ const slice = createSlice({
   },
 });
 
-const useReducerFromReduxToolKit = <T extends Slice>(slice: T) => {
-  const [state, dispatch] = useReducer(
-    slice.reducer,
-    slice.reducer(undefined, { type: "INIT" })
-  );
-  const actions = useMemo(
-    () =>
-      Object.entries(slice.actions).reduce(
-        (acc, [actionName, action]) => ({
-          ...acc,
-          [actionName]: (payload: any) => dispatch(action(payload)),
-        }),
-        {}
-      ),
-    [slice.actions]
-  );
-
-  return [state, actions];
-};
 function App() {
   const [state, actions] = useReducerFromReduxToolKit(slice);
 
